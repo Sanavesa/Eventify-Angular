@@ -1,0 +1,26 @@
+.myForm {
+    background-color: rgb(248, 248, 248);
+    padding: 30px 10%;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+}
+
+.title {
+    font-size: 22px;
+}
+
+.required:after {
+    content: " *";
+    color: red;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.example-full-width {
+    width: 100%;
+}

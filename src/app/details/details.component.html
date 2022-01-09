@@ -1,0 +1,177 @@
+<div *ngIf="event">
+    <div class="container-fluid">
+        <h1 class="text-center">{{event.name}}</h1>
+        <div class="row">
+            <div class="col-6 text-left p-0">
+                <button mat-button class="btn text-center align-middle border rounded-1 pl-1 pr-3 h-100" (click)="back()">
+                <mat-icon class="text-center align-middle">navigate_before</mat-icon>
+                <span class="text-center align-middle">List</span>
+            </button>
+            </div>
+            <div class="col-6 text-right p-0">
+                <a [href]="getTwitterLink(event)" target="_blank">
+                    <button mat-icon-button class="mr-2">
+                        <img src="https://csci571.com/hw/hw8/images/Twitter.png" style="height: 100%;">
+                    </button>
+                </a>
+                <button mat-icon-button (click)="toggleFavorite(event)" class="border rounded-0 h-100">
+                    <mat-icon class="align-middle text-center" [ngStyle]="{'color': (getFavoriteIcon(event)=='star_rate')? 'rgb(254,214,50)' : 'black'}">{{getFavoriteIcon(event)}}</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="row mt-2 mb-2">
+            <ul class="nav nav-tabs w-100 justify-content-end">
+                <li class="nav-item">
+                    <a href="javascript:;" class="nav-link" [class.active]="tabIndex == 1" (click)="tabIndex = 1">Event</a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:;" class="nav-link" [class.active]="tabIndex == 2" (click)="tabIndex = 2">Artist/Teams</a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:;" class="nav-link" [class.active]="tabIndex == 3" (click)="tabIndex = 3">Venue</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row  mb-5" *ngIf="tabIndex == 1">
+            <table class="table table-striped">
+                <tbody>
+                    <tr *ngIf="formatArtists(event).length > 0">
+                        <th scope="row">Artist/Team(s)</th>
+                        <td>{{formatArtists(event)}}</td>
+                    </tr>
+
+                    <tr *ngIf="event.venue.name != 'N/A'">
+                        <th scope="row">Venue</th>
+                        <td>{{event.venue.name}}</td>
+                    </tr>
+
+                    <tr *ngIf="event.info.date != 'N/A'">
+                        <th scope="row">Time</th>
+                        <td>{{event.info.date | date}}</td>
+                    </tr>
+
+                    <tr *ngIf="formatCategory(event).length > 0">
+                        <th scope="row">Category</th>
+                        <td>{{formatCategory(event)}}</td>
+                    </tr>
+
+                    <tr *ngIf="formatPriceRange(event) != 'N/A'">
+                        <th scope="row">Price Range</th>
+                        <td>{{formatPriceRange(event)}}</td>
+                    </tr>
+
+                    <tr *ngIf="event.info.ticketStatus != 'N/A'">
+                        <th scope="row">Ticket Status</th>
+                        <td>{{event.info.ticketStatus}}</td>
+                    </tr>
+
+                    <tr *ngIf="event.info.buyURL != 'N/A'">
+                        <th scope="row">Biy Ticket At</th>
+                        <td><a [href]="event.info.buyURL" target="_blank">Ticketmaster</a></td>
+                    </tr>
+
+                    <tr *ngIf="event.info.seatmapURL != 'N/A'">
+                        <th scope="row">Seat Map</th>
+                        <td><a href="javascript:;" (click)="openSeatmap(seatmap)">View Seat Map Here</a></td>
+                    </tr>
+
+                    <ng-template #seatmap let-modal>
+                        <div class="modal-header">
+                            <h1 class="modal-title" id="modal-basic-title" style="font-weight: bold;">View Seat Map</h1>
+                            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('')">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <img [src]="event.info.seatmapURL" alt="Seatmap" class="img-responsive" style="width: 100%;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" (click)="modal.close('')">Close</button>
+                        </div>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mb-5" *ngIf="tabIndex == 2">
+            <div *ngIf="event.artists.length == 0" class="alert alert-warning col-12 mb-3" role="alert">
+                No records.
+            </div>
+            <div *ngIf="event.artists.length > 0" class="col-12 mb-3">
+                <div *ngFor="let artist of event.artists" class="col-12 mb-2">
+                    <h2 class="text-center col-12 mb-1">{{artist.name}}</h2>
+                    <table class="table" *ngIf="artist.musicRelated && hasMusicData(artist)">
+                        <tbody>
+                            <tr *ngIf="artist.name != 'N/A'">
+                                <th scope="row">Name</th>
+                                <td>{{artist.name}}</td>
+                            </tr>
+                            <tr *ngIf="artist.followers != 0">
+                                <th scope="row">Followers</th>
+                                <td>{{artist.followers | number}}</td>
+                            </tr>
+                            <tr *ngIf="artist.popularity != 0">
+                                <th scope="row">Popularity</th>
+                                <td class="progress-wrapper">
+                                    <div class="progress-text">{{artist.popularity}}</div>
+                                    <round-progress [current]="artist.popularity" [max]="100" [radius]="16" [stroke]="2" [color]="progressColor"></round-progress>
+                                </td>
+                            </tr>
+                            <tr *ngIf="artist.spotifyURL != 'N/A'">
+                                <th scope="row">Check At</th>
+                                <td><a [href]="artist.spotifyURL" target="_blank">Spotify</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="!hasMusicData(artist)" class="text-center col-12">
+                        No details available.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5" *ngIf="tabIndex == 3">
+            <table class="table">
+                <tbody>
+                    <tr *ngIf="event.venue.address != 'N/A'">
+                        <th scope="row" style="min-width: 130px">Address</th>
+                        <td>{{event.venue.address}}</td>
+                    </tr>
+
+                    <tr *ngIf="formatCity(event) != 'N/A'">
+                        <th scope="row" style="min-width: 130px">City</th>
+                        <td>{{formatCity(event)}}</td>
+                    </tr>
+
+                    <tr *ngIf="event.venue.phoneNum != 'N/A'">
+                        <th scope="row" style="min-width: 130px">Phone Number</th>
+                        <td>{{event.venue.phoneNum}}</td>
+                    </tr>
+
+                    <tr *ngIf="event.venue.openHours != 'N/A'">
+                        <th scope="row" style="min-width: 130px">Open Hours</th>
+                        <td>{{event.venue.openHours}}</td>
+                    </tr>
+
+                    <tr *ngIf="event.venue.generalRule != 'N/A'">
+                        <th scope="row" style="min-width: 130px">General Rule</th>
+                        <td>{{event.venue.generalRule}}</td>
+                    </tr>
+
+                    <tr *ngIf="event.venue.childRule != 'N/A'">
+                        <th scope="row" style="min-width: 130px">Child Rule</th>
+                        <td>{{event.venue.childRule}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div *ngIf="event.venue.location.latitude != 'N/A' && event.venue.location.longitude != 'N/A'" class="w-100">
+                <google-map [center]="center" width="100%" height="500px" [zoom]="16">
+                    <map-marker *ngFor="let marker of markers" [position]="marker.position" [label]="marker.label" [title]="marker.title" [options]="marker.options">
+                    </map-marker>
+                </google-map>
+            </div>
+        </div>
+    </div>
+</div>

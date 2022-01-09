@@ -1,0 +1,13 @@
+.progress-wrapper {
+    position: relative;
+    margin: 4px auto;
+}
+
+.progress-text {
+    position: absolute;
+    top: 19px;
+    left: 20px;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}

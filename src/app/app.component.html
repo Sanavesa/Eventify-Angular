@@ -1,0 +1,10 @@
+<div class="page">
+    <app-form></app-form>
+    <nav class="text-center">
+        <a class="btn mr-1" routerLink="/results" [class.btn-primary]="isLinkActive('/results')" (click)="resultsSelected=true;">Results</a>
+        <a class="btn ml-1" routerLink="/favorites" [class.btn-primary]="isLinkActive('/favorites')" (click)="resultsSelected=false;">Favorites</a>
+    </nav>
+    <div class="mt-5" [@routeAnimations]="prepareRoute(outlet)" style="position: relative;">
+        <router-outlet #outlet="outlet"></router-outlet>
+    </div>
+</div>

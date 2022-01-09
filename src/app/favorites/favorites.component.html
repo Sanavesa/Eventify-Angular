@@ -1,0 +1,35 @@
+<div class="mt-4 text-right" *ngIf="this.favorites.length > 0">
+    <a [routerLink]="['/details', this.favorites[0].id]" routerLinkActive="active" class="details">
+        <span class="text-center align-middle">Details</span>
+        <mat-icon class="text-center align-middle">navigate_next</mat-icon>
+    </a>
+</div>
+<table class="table table-hover myTable" *ngIf="this.favorites.length > 0">
+    <thead style="border-bottom: 3px solid black;">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Event</th>
+            <th scope="col">Category</th>
+            <th scope="col">Venue Info</th>
+            <th scope="col" class="text-center">Favorite</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr mdbTableCol *ngFor="let event of favorites; let i = index" [attr.data-index]="i">
+            <td scope="row">{{i+1}}</td>
+            <td>{{event.date}}</td>
+            <td><a [routerLink]="['/details', event.id]" routerLinkActive="active" class="eventName" matTooltip="{{event.name}}">{{formatName(event)}}</a></td>
+            <td>{{formatCategory(event)}}</td>
+            <td>{{event.venue}}</td>
+            <td class="text-center">
+                <button mat-icon-button (click)="removeFavorite(event)">
+                    <mat-icon class="align-top">delete</mat-icon>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="favorites.length == 0" class="alert alert-warning" role="alert">
+    No records.
+</div>

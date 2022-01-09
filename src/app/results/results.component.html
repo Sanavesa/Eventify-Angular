@@ -1,0 +1,40 @@
+<p>
+    <ngb-progressbar type="info" [value]="progressBarValue" [striped]="true" [animated]="true" *ngIf="isFetchingData"></ngb-progressbar>
+</p>
+<div *ngIf="showTable">
+    <div class="mt-4 text-right" *ngIf="dataSource.length > 0">
+        <a [routerLink]="['/details', dataSource[0].id]" routerLinkActive="active" class="details">
+            <span class="text-center align-middle">Details</span>
+            <mat-icon class="text-center align-middle">navigate_next</mat-icon>
+        </a>
+    </div>
+    <table class="table table-hover myTable" *ngIf="dataSource.length > 0">
+        <thead style="border-bottom: 3px solid black;">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date</th>
+                <th scope="col">Event</th>
+                <th scope="col">Category</th>
+                <th scope="col">Venue Info</th>
+                <th scope="col" class="text-center">Favorite</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr mdbTableCol *ngFor="let event of dataSource; let i = index" [attr.data-index]="i">
+                <td scope="row">{{i+1}}</td>
+                <td>{{event.date}}</td>
+                <td><a [routerLink]="['/details', event.id]" routerLinkActive="active" class="eventName" matTooltip="{{event.name}}">{{formatName(event)}}</a></td>
+                <td>{{formatCategory(event)}}</td>
+                <td>{{event.venue}}</td>
+                <td class="text-center">
+                    <button mat-icon-button (click)="toggleFavorite(event)">
+                        <mat-icon class="align-top" [ngStyle]="{'color': (getFavoriteIcon(event)=='star_rate')? 'rgb(254,214,50)' : 'black'}">{{getFavoriteIcon(event)}}</mat-icon>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="dataSource.length == 0" class="alert alert-warning" role="alert">
+        No records.
+    </div>
+</div>
